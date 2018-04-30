@@ -5,6 +5,7 @@
  */
 package Visual;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 /**
@@ -50,6 +51,11 @@ public class FormPrincipal extends javax.swing.JFrame {
         menuCadastros.add(menuPessoas);
 
         menuCidades.setText("Cidades");
+        menuCidades.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCidadesActionPerformed(evt);
+            }
+        });
         menuCadastros.add(menuCidades);
 
         barraMenu.add(menuCadastros);
@@ -98,6 +104,15 @@ public class FormPrincipal extends javax.swing.JFrame {
     private void menuSobreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSobreActionPerformed
     JOptionPane.showMessageDialog(null," Sistema de Cadastros... \n Direitos Resevados ");
     }//GEN-LAST:event_menuSobreActionPerformed
+
+    private void menuCidadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCidadesActionPerformed
+     FormCidade form = new FormCidade(this,true);
+     form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+     form.setTitle("Manutençao de Cidades");
+     form.setLocationRelativeTo(null);
+     form.setResizable(false);
+     form.setVisible(true);
+    }//GEN-LAST:event_menuCidadesActionPerformed
 
     /**
      * @param args the command line arguments
