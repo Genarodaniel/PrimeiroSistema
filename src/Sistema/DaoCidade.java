@@ -16,11 +16,27 @@ public class DaoCidade {
     }
     
     public boolean salvar(Cidade obj){
+        
         if(obj.getCodigo()==null){
             Integer codigo = Dados.listaCidades.size() +1;
             obj.setCodigo(codigo);
             Dados.listaCidades.add(obj);
+                                    }
+        
+        else
+            {
+            System.out.println("Impossivel salvar \n Dados Já existentes");
+            }
+        
+            return true;
         }
-        return true;
-    }
+
+
+public boolean remover(Cidade obj){
+    Dados.listaCidades.remove(obj);
+    return true;
+        
+}
+
+
 }
