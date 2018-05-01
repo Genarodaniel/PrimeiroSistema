@@ -22,7 +22,10 @@ public class DaoPessoa {
             Dados.listaPessoas.add(obj);
             
         }
-       
+        else
+        {
+            System.out.println("Não foi possivel salvar \n Objeto ja existe");
+    }
         return true;
     }
     

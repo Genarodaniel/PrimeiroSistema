@@ -21,8 +21,14 @@ public class DaoCidade {
             Integer codigo = Dados.listaCidades.size() +1;
             obj.setCodigo(codigo);
             Dados.listaCidades.add(obj);
-             }
-         return true;
+                                    }
+        
+        else
+            {
+            System.out.println("Impossivel salvar \n Dados Já existentes");
+            }
+        
+            return true;
         }
 
 

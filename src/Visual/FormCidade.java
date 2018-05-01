@@ -5,37 +5,18 @@
  */
 package Visual;
 
-import Sistema.Cidade;
-import Sistema.DaoCidade;
-import java.util.ArrayList;
-
 /**
  *
  * @author adm
  */
 public class FormCidade extends javax.swing.JDialog {
 
-    DaoCidade dao= new DaoCidade();
-    
-    private void atualizaTabela(){
-        listObjetos.clear();
-        listObjetos.addAll(dao.getLista());
-        int linha = listObjetos.size()-1;
-        if (linha >=0){
-            tblObjects.setRowSelectionInterval(linha, linha);
-            tblObjects.scrollRectToVisible(tblObjects.getCellRect(linha, linha,true));
-        }
-    }
-    
     /**
      * Creates new form FormCidade
-     * @param parent
-     * @param modal
      */
     public FormCidade(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        atualizaTabela();
     }
 
     /**
@@ -47,10 +28,7 @@ public class FormCidade extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        listObjetos = org.jdesktop.observablecollections.ObservableCollections.observableList(new ArrayList<Cidade>())
-        ;
         painelNavegacao = new javax.swing.JPanel();
         btnPrimeiro = new javax.swing.JButton();
         btnAnterior = new javax.swing.JButton();
@@ -72,7 +50,7 @@ public class FormCidade extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txtCodigo = new javax.swing.JTextField();
-        txtNome = new javax.swing.JTextField();
+        jTextField1 = new javax.swing.JTextField();
         cboxUF = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -115,21 +93,17 @@ public class FormCidade extends javax.swing.JDialog {
 
         abaListage.setLayout(new java.awt.BorderLayout());
 
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, listObjetos, tblObjects);
-        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigo}"));
-        columnBinding.setColumnName("Código");
-        columnBinding.setColumnClass(Integer.class);
-        columnBinding.setEditable(false);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nome}"));
-        columnBinding.setColumnName("Nome");
-        columnBinding.setColumnClass(String.class);
-        columnBinding.setEditable(false);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${uf}"));
-        columnBinding.setColumnName("UF");
-        columnBinding.setColumnClass(String.class);
-        columnBinding.setEditable(false);
-        bindingGroup.addBinding(jTableBinding);
-        jTableBinding.bind();
+        tblObjects.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
         jScrollPane1.setViewportView(tblObjects);
 
         abaListage.add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -142,11 +116,6 @@ public class FormCidade extends javax.swing.JDialog {
         painelAcoes.setLayout(new java.awt.GridLayout());
 
         btnNova.setText("Nova");
-        btnNova.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNovaActionPerformed(evt);
-            }
-        });
         painelAcoes.add(btnNova);
 
         btnEditar.setText("Editar");
@@ -156,11 +125,6 @@ public class FormCidade extends javax.swing.JDialog {
         painelAcoes.add(btnCancelar);
 
         btnSalvar.setText("Salvar");
-        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalvarActionPerformed(evt);
-            }
-        });
         painelAcoes.add(btnSalvar);
 
         btnExcluir.setText("Excluir");
@@ -202,10 +166,6 @@ public class FormCidade extends javax.swing.JDialog {
         abaDados.add(jLabel3, gridBagConstraints);
 
         txtCodigo.setEditable(false);
-
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, tblObjects, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.codigo}"), txtCodigo, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
-
         txtCodigo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCodigoActionPerformed(evt);
@@ -220,10 +180,6 @@ public class FormCidade extends javax.swing.JDialog {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(6, 18, 0, 0);
         abaDados.add(txtCodigo, gridBagConstraints);
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, tblObjects, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.nome}"), txtNome, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 3;
@@ -232,13 +188,9 @@ public class FormCidade extends javax.swing.JDialog {
         gridBagConstraints.ipadx = 204;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(18, 18, 0, 0);
-        abaDados.add(txtNome, gridBagConstraints);
+        abaDados.add(jTextField1, gridBagConstraints);
 
         cboxUF.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO" }));
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, tblObjects, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.uf}"), cboxUF, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
-        bindingGroup.addBinding(binding);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 5;
@@ -250,8 +202,6 @@ public class FormCidade extends javax.swing.JDialog {
         abas.addTab("Dados", abaDados);
 
         getContentPane().add(abas, java.awt.BorderLayout.CENTER);
-
-        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -271,21 +221,6 @@ public class FormCidade extends javax.swing.JDialog {
     private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCodigoActionPerformed
-
-    private void btnNovaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovaActionPerformed
-       listObjetos.add((Cidade)new Cidade());
-       int linha = listObjetos.size()-1;
-       tblObjects.setRowSelectionInterval(linha, linha);
-      txtNome.requestFocus();
-    }//GEN-LAST:event_btnNovaActionPerformed
-
-    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        int linhaSelecionada = tblObjects.getSelectedRow();
-        Cidade obj = listObjetos.get(linhaSelecionada);
-        dao.salvar(obj);
-        atualizaTabela();
-        
-    }//GEN-LAST:event_btnSalvarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -315,16 +250,18 @@ public class FormCidade extends javax.swing.JDialog {
         //</editor-fold>
 
         /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(() -> {
-            FormCidade dialog = new FormCidade(new javax.swing.JFrame(), true);
-            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override
-                public void windowClosing(java.awt.event.WindowEvent e) {
-                    System.exit(0);
-                }
-            });
-            dialog.setLocationRelativeTo(null);
-            dialog.setVisible(true);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                FormCidade dialog = new FormCidade(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setLocationRelativeTo(null);
+               dialog.setVisible(true);
+            }
         });
     }
 
@@ -347,12 +284,10 @@ public class FormCidade extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private java.util.List<Cidade> listObjetos;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel painelAcoes;
     private javax.swing.JPanel painelNavegacao;
     private javax.swing.JTable tblObjects;
     private javax.swing.JTextField txtCodigo;
-    private javax.swing.JTextField txtNome;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
