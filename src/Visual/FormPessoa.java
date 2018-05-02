@@ -7,6 +7,8 @@ package Visual;
 
 import Sistema.Cidade;
 import Sistema.DaoCidade;
+import Sistema.DaoPessoa;
+import Sistema.Pessoa;
 import java.util.*;
 import javax.swing.*;
 
@@ -14,20 +16,22 @@ import javax.swing.*;
  *
  * @author adm
  */
-public class FormCidade extends javax.swing.JDialog {
+public class FormPessoa extends javax.swing.JDialog {
 
-    DaoCidade dao= new DaoCidade();
-    
-    private void atualizaTabela(){
+    DaoPessoa dao = new DaoPessoa();
+    DaoCidade daoCidade = new DaoCidade();
+
+    private void atualizaTabela() {
         listObjetos.clear();
         listObjetos.addAll(dao.getLista());
-        int linha = listObjetos.size()-1;
-        if (linha >=0){
+        int linha = listObjetos.size() - 1;
+        if (linha >= 0) {
             tblObjects.setRowSelectionInterval(linha, linha);
-            tblObjects.scrollRectToVisible(tblObjects.getCellRect(linha, linha,true));
+            tblObjects.scrollRectToVisible(tblObjects.getCellRect(linha, linha, true));
         }
     }
-    private void trataEdicao(boolean editando){
+
+    private void trataEdicao(boolean editando) {
         btnCancelar.setEnabled(editando);
         btnSalvar.setEnabled(editando);
         btnEditar.setEnabled(!editando);
@@ -40,28 +44,31 @@ public class FormCidade extends javax.swing.JDialog {
         txtNome.setEditable(editando);
         cboxUF.setEnabled(editando);
         tblObjects.setEnabled(!editando);
-        
+
     }
-    public boolean validaCampos(){
-        if(!(txtNome.getText().length()>0)){
-        JOptionPane.showMessageDialog(null,"informe o nome da cidade");
-        txtNome.requestFocus();
-        return false;
-        
-    }   
-        if(!(cboxUF.getSelectedIndex()>=0)){
-            JOptionPane.showMessageDialog(null,"Selecione o campo UF");
-        cboxUF.requestFocus();
+
+    public boolean validaCampos() {
+        if (!(txtNome.getText().length() > 0)) {
+            JOptionPane.showMessageDialog(null, "informe o nome da cidade");
+            txtNome.requestFocus();
+            return false;
+
+        }
+        if (!(cboxUF.getSelectedIndex() >= 0)) {
+            JOptionPane.showMessageDialog(null, "Selecione o campo UF");
+            cboxUF.requestFocus();
             return false;
         }
         return true;
     }
+
     /**
      * Creates new form FormCidade
+     *
      * @param parent
      * @param modal
      */
-    public FormCidade(java.awt.Frame parent, boolean modal) {
+    public FormPessoa(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         atualizaTabela();
@@ -81,6 +88,7 @@ public class FormCidade extends javax.swing.JDialog {
 
         listObjetos = org.jdesktop.observablecollections.ObservableCollections.observableList(new ArrayList<Cidade>())
         ;
+        listCidade = org.jdesktop.observablecollections.ObservableCollections.observableList(new ArrayList<Cidade>())  ;
         painelNavegacao = new javax.swing.JPanel();
         btnPrimeiro = new javax.swing.JButton();
         btnAnterior = new javax.swing.JButton();
@@ -313,17 +321,17 @@ public class FormCidade extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPrimeiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrimeiroActionPerformed
-     tblObjects.setRowSelectionInterval(0,0);
-     tblObjects.scrollRectToVisible(tblObjects.getCellRect(0,0,true));
+        tblObjects.setRowSelectionInterval(0, 0);
+        tblObjects.scrollRectToVisible(tblObjects.getCellRect(0, 0, true));
     }//GEN-LAST:event_btnPrimeiroActionPerformed
 
     private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
         int linha = tblObjects.getSelectedRow();
-        if((linha-1)>=0){
+        if ((linha - 1) >= 0) {
             linha--;
-        
-        tblObjects.setRowSelectionInterval(linha,linha);
-     tblObjects.scrollRectToVisible(tblObjects.getCellRect(linha,0,true));
+
+            tblObjects.setRowSelectionInterval(linha, linha);
+            tblObjects.scrollRectToVisible(tblObjects.getCellRect(linha, 0, true));
     }//GEN-LAST:event_btnAnteriorActionPerformed
     }
     private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
@@ -335,29 +343,29 @@ public class FormCidade extends javax.swing.JDialog {
     }//GEN-LAST:event_txtCodigoActionPerformed
 
     private void btnNovaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovaActionPerformed
-       listObjetos.add((Cidade)new Cidade());
-       int linha = listObjetos.size()-1;
-       tblObjects.setRowSelectionInterval(linha, linha);
-       trataEdicao(true);
-       txtNome.requestFocus();
-    
+        listObjetos.add((Pessoa) new Pessoa());
+        int linha = listObjetos.size() - 1;
+        tblObjects.setRowSelectionInterval(linha, linha);
+        trataEdicao(true);
+        txtNome.requestFocus();
+
     }//GEN-LAST:event_btnNovaActionPerformed
-    
+
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        if(validaCampos()){
-        int linhaSelecionada = tblObjects.getSelectedRow();
-        Cidade obj = listObjetos.get(linhaSelecionada);
-        dao.salvar(obj);
-        trataEdicao(false);
-        atualizaTabela();
+        if (validaCampos()) {
+            int linhaSelecionada = tblObjects.getSelectedRow();
+            Pessoa obj = listObjetos.get(linhaSelecionada);
+            dao.salvar(obj);
+            trataEdicao(false);
+            atualizaTabela();
         }
-        
+
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         trataEdicao(true);
         txtNome.requestFocus();
-        
+
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -366,14 +374,14 @@ public class FormCidade extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-      int opcao= 
-              JOptionPane.showOptionDialog(null,"Confirma a exclusao?","Pergunta",
-                      JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,
-                       new String[]{"Sim","Nao"},"Sim" );
-        if(opcao==0){
-        
+        int opcao
+                = JOptionPane.showOptionDialog(null, "Confirma a exclusao?", "Pergunta",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+                        new String[]{"Sim", "Nao"}, "Sim");
+        if (opcao == 0) {
+
             int linhaSelecionada = tblObjects.getSelectedRow();
-            Cidade obj= listObjetos.get(linhaSelecionada);
+            Pessoa obj = listObjetos.get(linhaSelecionada);
             dao.remover(obj);
             atualizaTabela();
         }
@@ -381,18 +389,18 @@ public class FormCidade extends javax.swing.JDialog {
 
     private void btnProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProximoActionPerformed
         int linha = tblObjects.getSelectedRow();
-        if((linha+1) <= (tblObjects.getRowCount()-1)){
+        if ((linha + 1) <= (tblObjects.getRowCount() - 1)) {
             linha++;
-        
-        tblObjects.setRowSelectionInterval(linha,linha);
-     tblObjects.scrollRectToVisible(tblObjects.getCellRect(linha,0,true));
+
+            tblObjects.setRowSelectionInterval(linha, linha);
+            tblObjects.scrollRectToVisible(tblObjects.getCellRect(linha, 0, true));
         }
     }//GEN-LAST:event_btnProximoActionPerformed
 
     private void btnUltimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUltimoActionPerformed
-        int linha = tblObjects.getRowCount()-1;
-        tblObjects.setRowSelectionInterval(linha,linha);
-        tblObjects.scrollRectToVisible(tblObjects.getCellRect(linha,0,true));
+        int linha = tblObjects.getRowCount() - 1;
+        tblObjects.setRowSelectionInterval(linha, linha);
+        tblObjects.scrollRectToVisible(tblObjects.getCellRect(linha, 0, true));
     }//GEN-LAST:event_btnUltimoActionPerformed
 
     /**
@@ -412,19 +420,20 @@ public class FormCidade extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FormCidade.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FormCidade.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FormCidade.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FormCidade.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(() -> {
-            FormCidade dialog = new FormCidade(new javax.swing.JFrame(), true);
+            FormPessoa dialog = new FormPessoa(new javax.swing.JFrame(), true);
             dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent e) {
@@ -455,7 +464,8 @@ public class FormCidade extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private java.util.List<Cidade> listObjetos;
+    private java.util.List<Cidade> listCidade;
+    private java.util.List<Pessoa> listObjetos;
     private javax.swing.JPanel painelAcoes;
     private javax.swing.JPanel painelNavegacao;
     private javax.swing.JTable tblObjects;
