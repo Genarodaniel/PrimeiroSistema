@@ -5,7 +5,9 @@
  */
 package Sistema;
 
+import java.beans.Transient;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -87,7 +89,11 @@ public class Pessoa implements Serializable{
         }
         return true;
     }
-    
+    @Transient 
+    public String getNascimentoFormatado(){
+       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
+       return sdf.format(nascimento.getTime());
+    }
     
     
 }

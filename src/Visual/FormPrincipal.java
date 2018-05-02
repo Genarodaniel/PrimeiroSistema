@@ -94,7 +94,12 @@ public class FormPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void menuPessoasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPessoasActionPerformed
-        // TODO add your handling code here:
+         FormPessoa form = new FormPessoa(this,true);
+     form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+     form.setTitle("Manutençao de Pessoas");
+     form.setLocationRelativeTo(null);
+     form.setResizable(false);
+     form.setVisible(true);
     }//GEN-LAST:event_menuPessoasActionPerformed
 
     private void menuAjudaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAjudaActionPerformed

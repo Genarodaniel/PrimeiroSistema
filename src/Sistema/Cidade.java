@@ -70,6 +70,12 @@ public class Cidade implements Serializable{
         return true;
     }
 
+  
+    @Override
+    public String toString() {
+        return nome; //To change body of generated methods, choose Tools | Templates.
+    }
+
     
     
 }

@@ -1,33 +1,32 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package Visual;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import Sistema.Cidade;
 import Sistema.DaoCidade;
 import Sistema.DaoPessoa;
 import Sistema.Pessoa;
-import java.util.*;
-import javax.swing.*;
 
 /**
  *
- * @author adm
+ * @author Jorge
  */
 public class FormPessoa extends javax.swing.JDialog {
 
     DaoPessoa dao = new DaoPessoa();
     DaoCidade daoCidade = new DaoCidade();
 
-    private void atualizaTabela() {
+    public void atualizaTabela() {
         listObjetos.clear();
         listObjetos.addAll(dao.getLista());
         int linha = listObjetos.size() - 1;
         if (linha >= 0) {
-            tblObjects.setRowSelectionInterval(linha, linha);
-            tblObjects.scrollRectToVisible(tblObjects.getCellRect(linha, linha, true));
+            tblObjetos.setRowSelectionInterval(linha, linha);
+            tblObjetos.scrollRectToVisible(
+                    tblObjetos.getCellRect(linha, linha, true));
         }
     }
 
@@ -36,42 +35,63 @@ public class FormPessoa extends javax.swing.JDialog {
         btnSalvar.setEnabled(editando);
         btnEditar.setEnabled(!editando);
         btnExcluir.setEnabled(!editando);
-        btnNova.setEnabled(!editando);
+        btnNovo.setEnabled(!editando);
+        btnFechar.setEnabled(!editando);
         btnPrimeiro.setEnabled(!editando);
-        btnAnterior.setEnabled(!editando);
         btnProximo.setEnabled(!editando);
+        btnAnterior.setEnabled(!editando);
         btnUltimo.setEnabled(!editando);
         txtNome.setEditable(editando);
-        cboxUF.setEnabled(editando);
-        tblObjects.setEnabled(!editando);
-
+        cbxCidade.setEnabled(editando);
+        txtNascimento.setEnabled(editando);
+        txtSalario.setEnabled(editando);
+        tblObjetos.setEnabled(!editando);
+        
     }
 
     public boolean validaCampos() {
         if (!(txtNome.getText().length() > 0)) {
-            JOptionPane.showMessageDialog(null, "informe o nome da cidade");
+            JOptionPane.showMessageDialog(null, "Informe o nome da pessoa");
             txtNome.requestFocus();
             return false;
-
         }
-        if (!(cboxUF.getSelectedIndex() >= 0)) {
-            JOptionPane.showMessageDialog(null, "Selecione o campo UF");
-            cboxUF.requestFocus();
+        if (!(cbxCidade.getSelectedIndex() >= 0)) {
+            JOptionPane.showMessageDialog(null, "Informe a cidade");
+            cbxCidade.requestFocus();
             return false;
         }
+        if ((txtNascimento.getText().length() > 0)) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            sdf.setLenient(false);
+            try {
+                sdf.parse(txtNascimento.getText());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Informe a data de nascimento");
+                txtNascimento.requestFocus();
+                return false;
+            }
+        }
+
+        try {
+            Double.parseDouble(txtSalario.getText());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Informe o salario");
+            txtSalario.requestFocus();
+            return false;
+        }
+
         return true;
     }
 
     /**
      * Creates new form FormCidade
-     *
-     * @param parent
-     * @param modal
      */
     public FormPessoa(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         atualizaTabela();
+        listCidade.clear();
+        listCidade.addAll(daoCidade.getLista());
         trataEdicao(false);
     }
 
@@ -83,12 +103,12 @@ public class FormPessoa extends javax.swing.JDialog {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        listObjetos = org.jdesktop.observablecollections.ObservableCollections.observableList(new ArrayList<Cidade>())
+        listObjetos = org.jdesktop.observablecollections.ObservableCollections.observableList(new ArrayList<Pessoa>())
         ;
-        listCidade = org.jdesktop.observablecollections.ObservableCollections.observableList(new ArrayList<Cidade>())  ;
+        listCidade = org.jdesktop.observablecollections.ObservableCollections.observableList(new ArrayList<Cidade>());
+        converterData = new Sistema.ConverterData();
         painelNavegacao = new javax.swing.JPanel();
         btnPrimeiro = new javax.swing.JButton();
         btnAnterior = new javax.swing.JButton();
@@ -96,12 +116,12 @@ public class FormPessoa extends javax.swing.JDialog {
         btnUltimo = new javax.swing.JButton();
         btnFechar = new javax.swing.JButton();
         abas = new javax.swing.JTabbedPane();
-        abaListage = new javax.swing.JPanel();
+        abaListagem = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblObjects = new javax.swing.JTable();
+        tblObjetos = new javax.swing.JTable();
         abaDados = new javax.swing.JPanel();
         painelAcoes = new javax.swing.JPanel();
-        btnNova = new javax.swing.JButton();
+        btnNovo = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnSalvar = new javax.swing.JButton();
@@ -111,13 +131,22 @@ public class FormPessoa extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         txtCodigo = new javax.swing.JTextField();
         txtNome = new javax.swing.JTextField();
-        cboxUF = new javax.swing.JComboBox<>();
+        cbxCidade = new javax.swing.JComboBox();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        javax.swing.text.MaskFormatter maskData = null;
+        try {
+            maskData = new javax.swing.text.MaskFormatter("##/##/####");
+            maskData.setPlaceholderCharacter('_');
+        } catch (Exception e){}
+        txtNascimento = new javax.swing.JFormattedTextField(maskData)
+        ;
+        txtSalario = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Cadastro de Cidades");
-        getContentPane().setLayout(new java.awt.BorderLayout());
 
-        painelNavegacao.setBorder(javax.swing.BorderFactory.createTitledBorder("Navegacao"));
+        painelNavegacao.setBorder(javax.swing.BorderFactory.createTitledBorder("Navegação"));
         painelNavegacao.setLayout(new java.awt.GridLayout(1, 0));
 
         btnPrimeiro.setText("Primeiro");
@@ -162,41 +191,42 @@ public class FormPessoa extends javax.swing.JDialog {
 
         getContentPane().add(painelNavegacao, java.awt.BorderLayout.NORTH);
 
-        abaListage.setLayout(new java.awt.BorderLayout());
+        abaListagem.setLayout(new java.awt.BorderLayout());
 
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, listObjetos, tblObjects);
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, listObjetos, tblObjetos);
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigo}"));
-        columnBinding.setColumnName("Código");
+        columnBinding.setColumnName("Codigo");
         columnBinding.setColumnClass(Integer.class);
-        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nome}"));
         columnBinding.setColumnName("Nome");
         columnBinding.setColumnClass(String.class);
-        columnBinding.setEditable(false);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${uf}"));
-        columnBinding.setColumnName("UF");
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cidade}"));
+        columnBinding.setColumnName("Cidade");
+        columnBinding.setColumnClass(Sistema.Cidade.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${salario}"));
+        columnBinding.setColumnName("Salario");
+        columnBinding.setColumnClass(Double.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nascimentoFormatado}"));
+        columnBinding.setColumnName("Nascimento");
         columnBinding.setColumnClass(String.class);
-        columnBinding.setEditable(false);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
-        jScrollPane1.setViewportView(tblObjects);
+        jScrollPane1.setViewportView(tblObjetos);
 
-        abaListage.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        abaListagem.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        abas.addTab("Listagem", abaListage);
+        abas.addTab("Listagem", abaListagem);
 
-        abaDados.setLayout(new java.awt.GridBagLayout());
-
-        painelAcoes.setBorder(javax.swing.BorderFactory.createTitledBorder("Açoes"));
+        painelAcoes.setBorder(javax.swing.BorderFactory.createTitledBorder("Ações"));
         painelAcoes.setLayout(new java.awt.GridLayout(1, 0));
 
-        btnNova.setText("Nova");
-        btnNova.addActionListener(new java.awt.event.ActionListener() {
+        btnNovo.setText("Novo");
+        btnNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNovaActionPerformed(evt);
+                btnNovoActionPerformed(evt);
             }
         });
-        painelAcoes.add(btnNova);
+        painelAcoes.add(btnNovo);
 
         btnEditar.setText("Editar");
         btnEditar.addActionListener(new java.awt.event.ActionListener() {
@@ -230,86 +260,85 @@ public class FormPessoa extends javax.swing.JDialog {
         });
         painelAcoes.add(btnExcluir);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 6;
-        gridBagConstraints.ipadx = 90;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(11, 0, 0, 0);
-        abaDados.add(painelAcoes, gridBagConstraints);
-
         jLabel1.setText("Código:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(9, 31, 0, 0);
-        abaDados.add(jLabel1, gridBagConstraints);
 
         jLabel2.setText("Nome:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(21, 31, 0, 0);
-        abaDados.add(jLabel2, gridBagConstraints);
 
-        jLabel3.setText("UF:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(21, 31, 0, 0);
-        abaDados.add(jLabel3, gridBagConstraints);
+        jLabel3.setText("Cidade:");
 
         txtCodigo.setEditable(false);
 
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, tblObjects, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.codigo}"), txtCodigo, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, tblObjetos, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.codigo}"), txtCodigo, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
-        txtCodigo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCodigoActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.gridheight = 2;
-        gridBagConstraints.ipadx = 204;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(6, 18, 0, 0);
-        abaDados.add(txtCodigo, gridBagConstraints);
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, tblObjects, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.nome}"), txtNome, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, tblObjetos, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.nome}"), txtNome, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.gridheight = 2;
-        gridBagConstraints.ipadx = 204;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(18, 18, 0, 0);
-        abaDados.add(txtNome, gridBagConstraints);
-
-        cboxUF.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO" }));
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, tblObjects, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.uf}"), cboxUF, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
+        org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, listCidade, cbxCidade);
+        bindingGroup.addBinding(jComboBoxBinding);
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, tblObjetos, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.cidade}"), cbxCidade, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
         bindingGroup.addBinding(binding);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridheight = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(18, 18, 132, 0);
-        abaDados.add(cboxUF, gridBagConstraints);
+        jLabel4.setText("Nascimento:");
+
+        jLabel5.setText("Salario:");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, tblObjetos, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.nascimento}"), txtNascimento, org.jdesktop.beansbinding.BeanProperty.create("value"));
+        binding.setConverter(converterData);
+        bindingGroup.addBinding(binding);
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, tblObjetos, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.salario}"), txtSalario, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+
+        javax.swing.GroupLayout abaDadosLayout = new javax.swing.GroupLayout(abaDados);
+        abaDados.setLayout(abaDadosLayout);
+        abaDadosLayout.setHorizontalGroup(
+            abaDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(painelAcoes, javax.swing.GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE)
+            .addGroup(abaDadosLayout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addGroup(abaDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5))
+                .addGap(18, 18, 18)
+                .addGroup(abaDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbxCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(abaDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(txtNascimento, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtSalario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)))
+                .addContainerGap(209, Short.MAX_VALUE))
+        );
+        abaDadosLayout.setVerticalGroup(
+            abaDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(abaDadosLayout.createSequentialGroup()
+                .addComponent(painelAcoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(abaDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(abaDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(abaDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(cbxCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(abaDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(abaDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel5)
+                    .addComponent(txtSalario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 105, Short.MAX_VALUE))
+        );
 
         abas.addTab("Dados", abaDados);
 
@@ -320,52 +349,31 @@ public class FormPessoa extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnPrimeiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrimeiroActionPerformed
-        tblObjects.setRowSelectionInterval(0, 0);
-        tblObjects.scrollRectToVisible(tblObjects.getCellRect(0, 0, true));
-    }//GEN-LAST:event_btnPrimeiroActionPerformed
-
-    private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
-        int linha = tblObjects.getSelectedRow();
-        if ((linha - 1) >= 0) {
-            linha--;
-
-            tblObjects.setRowSelectionInterval(linha, linha);
-            tblObjects.scrollRectToVisible(tblObjects.getCellRect(linha, 0, true));
-    }//GEN-LAST:event_btnAnteriorActionPerformed
-    }
     private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
         dispose();
     }//GEN-LAST:event_btnFecharActionPerformed
 
-    private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCodigoActionPerformed
-
-    private void btnNovaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovaActionPerformed
+    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         listObjetos.add((Pessoa) new Pessoa());
         int linha = listObjetos.size() - 1;
-        tblObjects.setRowSelectionInterval(linha, linha);
+        tblObjetos.setRowSelectionInterval(linha, linha);
         trataEdicao(true);
         txtNome.requestFocus();
-
-    }//GEN-LAST:event_btnNovaActionPerformed
+    }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         if (validaCampos()) {
-            int linhaSelecionada = tblObjects.getSelectedRow();
+            int linhaSelecionada = tblObjetos.getSelectedRow();
             Pessoa obj = listObjetos.get(linhaSelecionada);
             dao.salvar(obj);
             trataEdicao(false);
             atualizaTabela();
         }
-
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         trataEdicao(true);
         txtNome.requestFocus();
-
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -375,32 +383,47 @@ public class FormPessoa extends javax.swing.JDialog {
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         int opcao
-                = JOptionPane.showOptionDialog(null, "Confirma a exclusao?", "Pergunta",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-                        new String[]{"Sim", "Nao"}, "Sim");
+                = JOptionPane.showOptionDialog(null,
+                        "Confirma a exclusão?",
+                        "Pergunta",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null,
+                        new String[]{"Sim", "Não"}, "Sim");
         if (opcao == 0) {
-
-            int linhaSelecionada = tblObjects.getSelectedRow();
+            int linhaSelecionada = tblObjetos.getSelectedRow();
             Pessoa obj = listObjetos.get(linhaSelecionada);
             dao.remover(obj);
             atualizaTabela();
         }
     }//GEN-LAST:event_btnExcluirActionPerformed
 
-    private void btnProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProximoActionPerformed
-        int linha = tblObjects.getSelectedRow();
-        if ((linha + 1) <= (tblObjects.getRowCount() - 1)) {
-            linha++;
+    private void btnPrimeiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrimeiroActionPerformed
+        tblObjetos.setRowSelectionInterval(0, 0);
+        tblObjetos.scrollRectToVisible(tblObjetos.getCellRect(0, 0, true));
+    }//GEN-LAST:event_btnPrimeiroActionPerformed
 
-            tblObjects.setRowSelectionInterval(linha, linha);
-            tblObjects.scrollRectToVisible(tblObjects.getCellRect(linha, 0, true));
+    private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
+        int linha = tblObjetos.getSelectedRow();
+        if ((linha - 1) >= 0) {
+            linha--;
         }
+        tblObjetos.setRowSelectionInterval(linha, linha);
+        tblObjetos.scrollRectToVisible(tblObjetos.getCellRect(linha, 0, true));
+    }//GEN-LAST:event_btnAnteriorActionPerformed
+
+    private void btnProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProximoActionPerformed
+        int linha = tblObjetos.getSelectedRow();
+        if ((linha + 1) <= (tblObjetos.getRowCount() - 1)) {
+            linha++;
+        }
+        tblObjetos.setRowSelectionInterval(linha, linha);
+        tblObjetos.scrollRectToVisible(tblObjetos.getCellRect(linha, 0, true));
     }//GEN-LAST:event_btnProximoActionPerformed
 
     private void btnUltimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUltimoActionPerformed
-        int linha = tblObjects.getRowCount() - 1;
-        tblObjects.setRowSelectionInterval(linha, linha);
-        tblObjects.scrollRectToVisible(tblObjects.getCellRect(linha, 0, true));
+        int linha = tblObjetos.getRowCount() - 1;
+        tblObjetos.setRowSelectionInterval(linha, linha);
+        tblObjetos.scrollRectToVisible(tblObjetos.getCellRect(linha, 0, true));
     }//GEN-LAST:event_btnUltimoActionPerformed
 
     /**
@@ -429,48 +452,53 @@ public class FormPessoa extends javax.swing.JDialog {
             java.util.logging.Logger.getLogger(FormPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(() -> {
-            FormPessoa dialog = new FormPessoa(new javax.swing.JFrame(), true);
-            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override
-                public void windowClosing(java.awt.event.WindowEvent e) {
-                    System.exit(0);
-                }
-            });
-            dialog.setLocationRelativeTo(null);
-            dialog.setVisible(true);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                FormPessoa dialog = new FormPessoa(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
+            }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel abaDados;
-    private javax.swing.JPanel abaListage;
+    private javax.swing.JPanel abaListagem;
     private javax.swing.JTabbedPane abas;
     private javax.swing.JButton btnAnterior;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnFechar;
-    private javax.swing.JButton btnNova;
+    private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnPrimeiro;
     private javax.swing.JButton btnProximo;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JButton btnUltimo;
-    private javax.swing.JComboBox<String> cboxUF;
+    private javax.swing.JComboBox cbxCidade;
+    private Sistema.ConverterData converterData;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private java.util.List<Cidade> listCidade;
     private java.util.List<Pessoa> listObjetos;
     private javax.swing.JPanel painelAcoes;
     private javax.swing.JPanel painelNavegacao;
-    private javax.swing.JTable tblObjects;
+    private javax.swing.JTable tblObjetos;
     private javax.swing.JTextField txtCodigo;
+    private javax.swing.JFormattedTextField txtNascimento;
     private javax.swing.JTextField txtNome;
+    private javax.swing.JTextField txtSalario;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
